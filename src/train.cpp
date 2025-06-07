@@ -7,15 +7,16 @@ Train::~Train() {
     if (!first) return;
     Car* current = first->next;
     while (current != first) {
-        Car* next = current->next;
+        Car* nextCar = current->next;
         delete current;
-        current = next;
+        current = nextCar;
     }
     delete first;
+    first = nullptr;
 }
 
-void Train::addCar(bool light) {
-    Car* newCar = new Car{ light, nullptr, nullptr };
+void Train::addCar(bool lightOn) {
+    Car* newCar = new Car{ lightOn, nullptr, nullptr };
     if (!first) {
         first = newCar;
         first->next = first;
@@ -29,39 +30,36 @@ void Train::addCar(bool light) {
     }
 }
 
-void Train::moveForward(Car*& current) {
-    current = current->next;
-    countOp++;
-}
-
-void Train::moveBackward(Car*& current) {
-    current = current->prev;
-    countOp++;
-}
-
 int Train::getLength() {
     if (!first) return 0;
     countOp = 0;
-    Car* current = first;
-    current->light = true;  
-    int steps = 1;
+    Car* currentTrainCar = first;
+    if (!currentTrainCar->light) {
+        currentTrainCar->light = true;
+    }
+    int trainLength = 0;
     while (true) {
-        Car* walker = current;
-        for (int i = 0; i < steps; ++i) {
-            walker = walker->next;
+        int traversalSteps = 0;
+        while (true) {
+            currentTrainCar = currentTrainCar->next;
+            traversalSteps++;
+            countOp++;
+            if (currentTrainCar->light || currentTrainCar == first) break;
+        }
+        if (currentTrainCar == first && !currentTrainCar->light) break;
+        if (currentTrainCar->light) {
+            currentTrainCar->light = false;
+        }
+        for (int i = 0; i < traversalSteps; i++) {
+            currentTrainCar = currentTrainCar->prev;
             countOp++;
         }
-        if (walker->light) {
-            return steps;
-        } else {
-            walker->light = true;
-            for (int i = 0; i < steps; ++i) {
-                walker = walker->prev;
-                countOp++;
-            }
-            steps++;
+        if (!currentTrainCar->light) {
+            trainLength = traversalSteps;
+            break;
         }
     }
+    return trainLength;
 }
 
 int Train::getOpCount() {
