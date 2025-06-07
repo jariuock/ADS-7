@@ -2,7 +2,7 @@
 #ifndef INCLUDE_TRAIN_H_
 #define INCLUDE_TRAIN_H_
 
-class Train {
+class Train { 
  private:
   struct Car {
     bool light; // состояние лампочки
