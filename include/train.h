@@ -3,7 +3,7 @@
 #define INCLUDE_TRAIN_H_
 
 class Train {
-private:
+ private:
     struct Car {
         bool light; // состояние лампочки
         Car* next;
@@ -13,7 +13,7 @@ private:
     Car* first; // точка входа в поезд (первый вагон)
     void moveForward(Car*& current);
     void moveBackward(Car*& current);
-public:
+ public:
     Train();
     ~Train();
     void addCar(bool light); // добавить вагон с начальным состоянием лампочки
